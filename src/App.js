@@ -12,63 +12,79 @@ const App = () => {
   const [country4, setCountry4] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
 
-  function changeCity() {
+  const [getAllItems, setGetAllItems] = useState("");
+
+  function getAllJson() {
     axios
       .get("https://restcountries.eu/rest/v2/all")
       .then(function (response) {
-        const randNumber = Math.floor(Math.random() * 4) + 1;
-        const randomCountry1 = Math.floor(Math.random() * 250);
-        const randomCountry2 = Math.floor(Math.random() * 250);
-        const randomCountry3 = Math.floor(Math.random() * 250);
-        const randomCountry4 = Math.floor(Math.random() * 250);
-
-        setCountry1(response.data[randomCountry1].name);
-        setCountry2(response.data[randomCountry2].name);
-        setCountry3(response.data[randomCountry3].name);
-        setCountry4(response.data[randomCountry4].name);
-
-        switch (randNumber) {
-          case 1:
-            setCapital(response.data[randomCountry1].capital);
-            setSelectedCountry(response.data[randomCountry1].name);
-            break;
-          case 2:
-            setCapital(response.data[randomCountry2].capital);
-            setSelectedCountry(response.data[randomCountry2].name);
-            break;
-          case 3:
-            setCapital(response.data[randomCountry3].capital);
-            setSelectedCountry(response.data[randomCountry2].name);
-            break;
-          case 4:
-            setCapital(response.data[randomCountry4].capital);
-            setSelectedCountry(response.data[randomCountry2].name);
-            break;
-          default:
-            break;
-        }
+        setGetAllItems(response);
       })
       .catch(function (error) {
         console.log(error);
       });
   }
 
+  function changeCity(e) {
+    var correctBtn = document.getElementsByClassName("btn-outline-info")[0];
+    var allDangerBtn = document.getElementsByClassName("btn-outline-danger")[0];
+    if (correctBtn !== undefined) {
+      correctBtn.classList.add("btn-outline-danger");
+      allDangerBtn.classList.remove("btn-outline-info");
+    }
+
+    const randNumber = Math.floor(Math.random() * 4) + 1;
+    const randomCountry1 = Math.floor(Math.random() * 250);
+    const randomCountry2 = Math.floor(Math.random() * 250);
+    const randomCountry3 = Math.floor(Math.random() * 250);
+    const randomCountry4 = Math.floor(Math.random() * 250);
+
+    setCountry1(getAllItems.data[randomCountry1].name);
+    setCountry2(getAllItems.data[randomCountry2].name);
+    setCountry3(getAllItems.data[randomCountry3].name);
+    setCountry4(getAllItems.data[randomCountry4].name);
+
+    switch (randNumber) {
+      case 1:
+        setCapital(getAllItems.data[randomCountry1].capital);
+        setSelectedCountry(getAllItems.data[randomCountry1].name);
+        break;
+      case 2:
+        setCapital(getAllItems.data[randomCountry2].capital);
+        setSelectedCountry(getAllItems.data[randomCountry2].name);
+        break;
+      case 3:
+        setCapital(getAllItems.data[randomCountry3].capital);
+        setSelectedCountry(getAllItems.data[randomCountry2].name);
+        break;
+      case 4:
+        setCapital(getAllItems.data[randomCountry4].capital);
+        setSelectedCountry(getAllItems.data[randomCountry2].name);
+        break;
+      default:
+        break;
+    }
+  }
+
   return (
     <div>
       <Cards>
-        {capital === "" && <button onClick={changeCity}>Start</button>}
+        {getAllItems === "" && <button onClick={getAllJson}>Start</button>}
+        {getAllItems !== "" && capital === "" && (
+          <button onClick={changeCity}>Get Question</button>
+        )}
 
         {capital !== "" && (
           <React.Fragment>
             {" "}
             <Question capital={capital} />{" "}
             <Options
+              answer={selectedCountry}
               country1={country1}
               country2={country2}
               country3={country3}
               country4={country4}
             />
-            <p>{selectedCountry}</p>
             <button className="float-end btn btn-primary" onClick={changeCity}>
               Next
             </button>
