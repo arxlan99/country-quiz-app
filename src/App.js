@@ -11,7 +11,8 @@ const App = () => {
   const [country3, setCountry3] = useState("");
   const [country4, setCountry4] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
-
+  const [totalAnswer, setTotalAnswer] = useState(0);
+  const [showResult, setShowResult] = useState(false);
   const [getAllItems, setGetAllItems] = useState("");
 
   function getAllJson() {
@@ -44,6 +45,8 @@ const App = () => {
     setCountry3(getAllItems.data[randomCountry3].name);
     setCountry4(getAllItems.data[randomCountry4].name);
 
+    setShowResult(false);
+
     switch (randNumber) {
       case 1:
         setCapital(getAllItems.data[randomCountry1].capital);
@@ -66,6 +69,10 @@ const App = () => {
     }
   }
 
+  function nextQuestion() {
+    document.getElementById("nextQuestion").click();
+  }
+
   return (
     <div>
       <Cards>
@@ -74,7 +81,7 @@ const App = () => {
           <button onClick={changeCity}>Get Question</button>
         )}
 
-        {capital !== "" && (
+        {capital !== "" && showResult === false && (
           <React.Fragment>
             {" "}
             <Question capital={capital} />{" "}
@@ -84,10 +91,24 @@ const App = () => {
               country2={country2}
               country3={country3}
               country4={country4}
+              setNextQuestion={nextQuestion}
+              setShowResult={setShowResult}
+              setTotalAnswer={setTotalAnswer}
+              totalAnswer={totalAnswer}
             />
-            <button className="float-end btn btn-primary" onClick={changeCity}>
+            <button
+              id="nextQuestion"
+              className="float-end btn btn-primary"
+              onClick={changeCity}
+            >
               Next
             </button>
+          </React.Fragment>
+        )}
+        {showResult === true && (
+          <React.Fragment>
+            <h1> Total correct answers : {totalAnswer} </h1>
+            <button onClick={changeCity}>Start Again</button>
           </React.Fragment>
         )}
       </Cards>

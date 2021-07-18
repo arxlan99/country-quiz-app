@@ -1,17 +1,24 @@
 import React, { useState } from "react";
 
 const Options = (props) => {
-  const [total, setTotal] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(4);
   function controlOptions(e) {
     const text = e.target.innerText;
     if (text === props.answer) {
       e.target.classList.remove("btn-outline-danger");
       e.target.classList.add("btn-outline-info");
       alert("Succesful!!!");
-      setTotal(total + 1);
-      console.log(total);
+      props.setTotalAnswer(props.totalAnswer + 1);
+      setTotalQuestions(totalQuestions - 1);
+      props.setNextQuestion();
     } else {
       alert("answer is wrong");
+      setTotalQuestions(totalQuestions - 1);
+      props.setNextQuestion();
+    }
+    console.log(totalQuestions);
+    if (totalQuestions === 0) {
+      props.setShowResult(true);
     }
   }
 
